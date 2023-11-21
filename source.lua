@@ -1686,7 +1686,7 @@ function self.editDropdownOptions(dropdownName, newList)
         local defaultSelected = newList[1] or "" -- Varsayılan olarak ilk seçeneği kullan
         dropdown.DropdownBar.Open.Text = defaultSelected
 
-	for _, child in ipairs(dropdown.Box.ScrollingFrame:GetChildren()) do
+        for _, child in ipairs(dropdown.Box.ScrollingFrame:GetChildren()) do
             if child:IsA("TextButton") then
                 child:Destroy()
             end
@@ -1706,7 +1706,10 @@ function self.editDropdownOptions(dropdownName, newList)
                     twPos:Play()
                     twPos.Completed:Wait()
                     dropdown.Box.Visible = false
-                    -- Burada func(list) fonksiyonunu çağırabilirsiniz, eğer gerekliyse
+
+                    if dropdown.OnOptionSelected and type(dropdown.OnOptionSelected) == "function" then
+                        dropdown.OnOptionSelected(list)
+                    end
                 end)
             end)
 
@@ -1717,7 +1720,7 @@ function self.editDropdownOptions(dropdownName, newList)
     else
         warn("Dropdown not found or invalid type.")
     end
-			end
+end
 			
 	function self.newToggle(title, desc, toggle, func)
 		local realToggle = toggle
