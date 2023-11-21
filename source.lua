@@ -1679,7 +1679,46 @@ function self.newSlider(name, desc, min, max, manageSlider, func)
     end)
 end
 
-	
+function self.editDropdownOptions(dropdownName, newList)
+    local dropdown = newTab:FindFirstChild(dropdownName)
+
+    if dropdown and dropdown:IsA("Frame") then
+        local defaultSelected = newList[1] or "" -- Varsayılan olarak ilk seçeneği kullan
+        dropdown.DropdownBar.Open.Text = defaultSelected
+
+	for _, child in ipairs(dropdown.Box.ScrollingFrame:GetChildren()) do
+            if child:IsA("TextButton") then
+                child:Destroy()
+            end
+        end
+
+        for i, list in ipairs(newList) do
+            local newddbtn = reserved.DropdownButton:Clone()
+            newddbtn.Visible = true
+            newddbtn.Parent = dropdown.Box.ScrollingFrame
+
+            newddbtn.Name = list
+            newddbtn.name.Text = list
+            task.spawn(function()
+                newddbtn.MouseButton1Click:Connect(function()
+                    dropdown.DropdownBar.Open.Text = list
+                    local twPos = twServ:Create(dropdown.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
+                    twPos:Play()
+                    twPos.Completed:Wait()
+                    dropdown.Box.Visible = false
+                    -- Burada func(list) fonksiyonunu çağırabilirsiniz, eğer gerekliyse
+                end)
+            end)
+
+            if list == defaultSelected then
+                dropdown.DropdownBar.Open.Text = list
+            end
+        end
+    else
+        warn("Dropdown not found or invalid type.")
+    end
+			end
+			
 	function self.newToggle(title, desc, toggle, func)
 		local realToggle = toggle
 		local newToggle = reserved.Toggle:Clone()
