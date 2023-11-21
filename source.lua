@@ -1504,22 +1504,27 @@ function UILIB.newTab(name, img)
 		newbtn.MouseButton1Click:Connect(func)
 	end
 
-	function self.newLabel(text)
+	function self.newLabel(text, name == "label")
 		local newLabel = reserved.Label:Clone()
 		newLabel.Parent = newTab
 		newLabel.Visible = true
+		newLabel.Name = name
 		newLabel.Title.Text = text
 
 		return newLabel.Title
 	end
 
-  function self.editLabel(newLabel, text)
-		newLabel.Parent = newTab
-		newLabel.Visible = true
-		newLabel.Title.Text = text
+  function self.editLabel(name, newText)
+    local label = newTab:FindFirstChild(name)
 
-		return newLabel.Title
-  end
+    if label and label:IsA("TextLabel") then
+        label.Text = newText
+    else
+        warn("Label not found or is not a TextLabel.")
+    end
+end
+end
+
 
 	function self.newInput(name, desc, func)
 		local newInput = reserved.Textbox:Clone()
@@ -1677,46 +1682,6 @@ function self.newSlider(name, desc, min, max, manageSlider, func)
             MouseDown = false
         end
     end)
-end
-
-function self.editDropdown(name, newOptions)
-    local dropdownToUpdate = newTab:FindFirstChild(name)
-
-    if dropdownToUpdate and dropdownToUpdate:IsA("Frame") then
-        dropdownToUpdate.DropdownBar.Open.Text = "" -- Varsayılanı temizle
-
-        -- Temizleme öncesi mevcut seçenekleri kaldır
-        for _, existingOption in ipairs(dropdownToUpdate.Box.ScrollingFrame:GetChildren()) do
-            if existingOption:IsA("TextButton") then
-                existingOption:Destroy()
-            end
-        end
-
-        -- Yeni seçenekleri ekle
-        for _, option in ipairs(newOptions) do
-            local newddbtn = reserved.DropdownButton:Clone()
-            newddbtn.Visible = true
-            newddbtn.Parent = dropdownToUpdate.Box.ScrollingFrame
-
-            newddbtn.Name = option
-            newddbtn.name.Text = option
-            task.spawn(function()
-                newddbtn.MouseButton1Click:Connect(function()
-                    dropdownToUpdate.DropdownBar.Open.Text = option
-                    local twPos = twServ:Create(dropdownToUpdate.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
-                    twPos:Play()
-                    twPos.Completed:Wait()
-                    dropdownToUpdate.Box.Visible = false
-                    -- Eğer fonksiyon parametre olarak geçilmişse çağır
-                    if dropdownToUpdate.CallbackFunction then
-                        dropdownToUpdate.CallbackFunction(option)
-                    end
-                end)
-            end)
-        end
-    else
-        warn("Dropdown not found or not of the correct type.")
-    end
 end
 
 			
