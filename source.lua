@@ -1679,48 +1679,46 @@ function self.newSlider(name, desc, min, max, manageSlider, func)
     end)
 end
 
-function self.editDropdownOptions(dropdownName, newList)
-    local dropdown = newTab:FindFirstChild(dropdownName)
+function self.editDropdown(name, newOptions)
+    local dropdownToUpdate = newTab:FindFirstChild(name)
 
-    if dropdown and dropdown:IsA("Frame") then
-        local defaultSelected = newList[1] or "" -- Varsayılan olarak ilk seçeneği kullan
-        dropdown.DropdownBar.Open.Text = defaultSelected
+    if dropdownToUpdate and dropdownToUpdate:IsA("Frame") then
+        dropdownToUpdate.DropdownBar.Open.Text = "" -- Varsayılanı temizle
 
-        for _, child in ipairs(dropdown.Box.ScrollingFrame:GetChildren()) do
-            if child:IsA("TextButton") then
-                child:Destroy()
+        -- Temizleme öncesi mevcut seçenekleri kaldır
+        for _, existingOption in ipairs(dropdownToUpdate.Box.ScrollingFrame:GetChildren()) do
+            if existingOption:IsA("TextButton") then
+                existingOption:Destroy()
             end
         end
 
-        for i, list in ipairs(newList) do
+        -- Yeni seçenekleri ekle
+        for _, option in ipairs(newOptions) do
             local newddbtn = reserved.DropdownButton:Clone()
             newddbtn.Visible = true
-            newddbtn.Parent = dropdown.Box.ScrollingFrame
+            newddbtn.Parent = dropdownToUpdate.Box.ScrollingFrame
 
-            newddbtn.Name = list
-            newddbtn.name.Text = list
+            newddbtn.Name = option
+            newddbtn.name.Text = option
             task.spawn(function()
                 newddbtn.MouseButton1Click:Connect(function()
-                    dropdown.DropdownBar.Open.Text = list
-                    local twPos = twServ:Create(dropdown.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
+                    dropdownToUpdate.DropdownBar.Open.Text = option
+                    local twPos = twServ:Create(dropdownToUpdate.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
                     twPos:Play()
                     twPos.Completed:Wait()
-                    dropdown.Box.Visible = false
-
-                    if dropdown.OnOptionSelected and type(dropdown.OnOptionSelected) == "function" then
-                        dropdown.OnOptionSelected(list)
+                    dropdownToUpdate.Box.Visible = false
+                    -- Eğer fonksiyon parametre olarak geçilmişse çağır
+                    if dropdownToUpdate.CallbackFunction then
+                        dropdownToUpdate.CallbackFunction(option)
                     end
                 end)
             end)
-
-            if list == defaultSelected then
-                dropdown.DropdownBar.Open.Text = list
-            end
         end
     else
-        warn("Dropdown not found or invalid type.")
+        warn("Dropdown not found or not of the correct type.")
     end
 end
+
 			
 	function self.newToggle(title, desc, toggle, func)
 		local realToggle = toggle
