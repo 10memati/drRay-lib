@@ -1729,52 +1729,57 @@ end
 		
 	end
 	
-	function self.newDropdown(name, desc, listTable, func)
-		local newdd = reserved.Dropdown:Clone()
-		newdd.Visible = true
-		newdd.Parent = newTab
-		
-		newdd.Name = name
-		newdd.Title.Text = name
-		newdd.Description.Text = desc
-		
-		for i, list in ipairs(listTable) do
-			local newddbtn = reserved.DropdownButton:Clone()
-			newddbtn.Visible = true
-			newddbtn.Parent = newdd.Box.ScrollingFrame
+	function self.newDropdown(name, desc, defaultOption, listTable, func)
+    local newdd = reserved.Dropdown:Clone()
+    newdd.Visible = true
+    newdd.Parent = newTab
+    
+    newdd.Name = name
+    newdd.Title.Text = name
+    newdd.Description.Text = desc
 
-			newddbtn.Name = list
-			newddbtn.name.Text = list
-			task.spawn(function()
-				newddbtn.MouseButton1Click:Connect(function()
-					newdd.DropdownBar.Open.Text = list
-					local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
-					twPos:Play()
-					twPos.Completed:Wait()
-					newdd.Box.Visible = false
-					func(list)
-				end)
-			end)
-		end		
-		
-		newdd.DropdownBar.Trigger.MouseButton1Click:Connect(function()
-			
-			
-			if newdd.Box.Visible == false then
-				newdd.Box.Visible = true
-				local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,1.696, 0)})
-				twPos:Play()
-			elseif newdd.Box.Visible == true then
-				local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
-				twPos:Play()
-				twPos.Completed:Wait()
-				newdd.Box.Visible = false
-			end
-		end)
-	end
+    local defaultSelected = defaultOption or "" -- Default seçenek belirleme
 
-	return self
+    for i, list in ipairs(listTable) do
+        local newddbtn = reserved.DropdownButton:Clone()
+        newddbtn.Visible = true
+        newddbtn.Parent = newdd.Box.ScrollingFrame
+
+        newddbtn.Name = list
+        newddbtn.name.Text = list
+        task.spawn(function()
+            newddbtn.MouseButton1Click:Connect(function()
+                newdd.DropdownBar.Open.Text = list
+                local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
+                twPos:Play()
+                twPos.Completed:Wait()
+                newdd.Box.Visible = false
+                func(list)
+            end)
+        end)
+
+        if list == defaultSelected then
+            newdd.DropdownBar.Open.Text = list
+        end
+    end
+        
+    newdd.DropdownBar.Trigger.MouseButton1Click:Connect(function()
+        if newdd.Box.Visible == false then
+            newdd.Box.Visible = true
+            local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,1.696, 0)})
+            twPos:Play()
+        elseif newdd.Box.Visible == true then
+            local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
+            twPos:Play()
+            twPos.Completed:Wait()
+            newdd.Box.Visible = false
+        end
+    end)
 end
+
+return self
+end
+
 
 
 
