@@ -1513,16 +1513,7 @@ function UILIB.newTab(name, img)
 		return newLabel.Title
 	end
 
-  function self.editLabel(label, newText)
-    if label and label:IsA("TextLabel") then
-        label.Text = newText
-    else
-        warn("Invalid label or label type.")
-    end
-end
-		
-
-
+	
 	function self.newInput(name, desc, func)
 		local newInput = reserved.Textbox:Clone()
 		local textbox = newInput.TextboxBar.ActualTextbox
