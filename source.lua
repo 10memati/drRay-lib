@@ -1521,6 +1521,7 @@ function UILIB.newTab(name, img)
         warn("Invalid label or label type.")
     end
 end
+		
 
 
 	function self.newInput(name, desc, func)
