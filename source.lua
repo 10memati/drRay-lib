@@ -1514,15 +1514,12 @@ function UILIB.newTab(name, img)
 		return newLabel.Title
 	end
 
-  function self.editLabel(name, newText)
-    local label = newTab:FindFirstChild(name)
-
+  function self.editLabel(label, newText)
     if label and label:IsA("TextLabel") then
         label.Text = newText
     else
-        warn("Label not found or is not a TextLabel.")
+        warn("Invalid label or label type.")
     end
-end
 end
 
 
