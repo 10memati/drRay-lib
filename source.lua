@@ -1614,7 +1614,7 @@ function UILIB.newTab(name, img)
 	end
 
 
-function self.newSlider(name, desc, min, max, manageSlider, func)
+function self.newSlider(name, desc, defaultValue, min, max, manageSlider, func)
     local newSlider = reserved.Slider:Clone()
 
     newSlider.MouseEnter:Connect(function()
@@ -1665,6 +1665,11 @@ function self.newSlider(name, desc, min, max, manageSlider, func)
         until MouseDown == false
     end
 
+    if defaultValue then
+        Label.Text = defaultValue
+        func(defaultValue)
+    end
+
     Trigger.MouseButton1Down:Connect(Update)
 
     UIS.InputEnded:Connect(function(input)
@@ -1673,7 +1678,6 @@ function self.newSlider(name, desc, min, max, manageSlider, func)
         end
     end)
 end
-
 			
 	function self.newToggle(title, desc, toggle, func)
 		local realToggle = toggle
