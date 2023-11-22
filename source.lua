@@ -1614,7 +1614,7 @@ function UILIB.newTab(name, img)
 	end
 
 
-function self.newSlider(name, desc, defaultValue, min, max, manageSlider, func)
+function self.newSlider(name, desc, min, max, manageSlider, func)
     local newSlider = reserved.Slider:Clone()
 
     newSlider.MouseEnter:Connect(function()
@@ -1663,11 +1663,6 @@ function self.newSlider(name, desc, defaultValue, min, max, manageSlider, func)
             local tween = tweenServ:Create(Fill, TweenInfo.new(delayTw, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.fromScale(Percent, 1) })
             tween:Play()
         until MouseDown == false
-    end
-
-    if defaultValue then
-        Label.Text = defaultValue
-        func(defaultValue)
     end
 
     Trigger.MouseButton1Down:Connect(Update)
