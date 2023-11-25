@@ -1306,8 +1306,6 @@ function UILIB:Load(name, img, direction)
         task.spawn(function()
 	     while true do
 		task.wait(0.1)
-os.setlocale("time", "tr_TR.utf-8")
-
 parent.TopBar.ProfileMenu.Clock.TextLabel.Text = os.date("%H:%M")
 	     end
         end)
