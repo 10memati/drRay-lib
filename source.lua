@@ -388,6 +388,23 @@ DRR["32"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Center;
 DRR["32"]["Padding"] = UDim.new(0.014999999664723873, 0);
 DRR["32"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
 
+-- DrRay.Folder.TabReserved.ScrollingFrame
+local scrollingFrame = DRR["31"]
+
+-- Sağa kaydırma butonu eklemek
+local scrollRightButton = Instance.new("TextButton", scrollingFrame)
+scrollRightButton.Text = "→"
+scrollRightButton.Size = UDim2.new(0, 30, 1, 0)
+scrollRightButton.Position = UDim2.new(1, 0, 0, 0)
+
+-- Sola kaydırma butonu eklemek
+local scrollLeftButton = Instance.new("TextButton", scrollingFrame)
+scrollLeftButton.Text = "←"
+scrollLeftButton.Size = UDim2.new(0, 30, 1, 0)
+scrollLeftButton.Position = UDim2.new(-1, 0, 0, 0)
+
+-- Kaydırma işlevselliğini eklemek için kodları buraya ekleyin
+
 -- DrRay.Folder.TabButtonReserved
 DRR["33"] = Instance.new("ImageButton", DRR["30"]);
 DRR["33"]["BorderSizePixel"] = 0;
