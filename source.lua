@@ -1292,14 +1292,17 @@ local closed = false
 parent.TopBar.ProfileMenu.PlayerProfile.TextLabel.Text = game:GetService("Players").LocalPlayer.DisplayName
 parent.TopBar.ProfileMenu.PlayerProfile.ImageLabel.Image = game:GetService("Players"):GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
 
-function UILIB:newNotification(title, description, duration)
+local MAX_NOTIFICATIONS = 3
+local notificationStack = {}  -- Bildirimleri takip etmek için bir liste
+
+function UILIB.newNotification(title, description, duration)
     local notification = Instance.new("ScreenGui")
     notification.Name = "Notification"
     
     local frame = Instance.new("Frame")
     frame.Parent = notification
-    frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33) -- Koyu temalÄ± arka plan
-    frame.Position = UDim2.new(1, -300, 1, -120)
+    frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33) -- Koyu temalı arka plan
+    frame.Position = UDim2.new(1, -250, 1, -120)
     frame.Size = UDim2.new(0, 250, 0, 100)
     frame.BorderSizePixel = 0
     frame.ClipsDescendants = true
@@ -1309,7 +1312,7 @@ function UILIB:newNotification(title, description, duration)
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = frame
     
-    -- BaÅŸlÄ±k Ã§izgisi
+    -- Başlık çizgisi
     local line = Instance.new("Frame")
     line.Parent = frame
     line.BackgroundColor3 = Color3.fromRGB(169, 169, 169) -- Gri renk
@@ -1322,7 +1325,7 @@ function UILIB:newNotification(title, description, duration)
     titleTextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleTextLabel.Font = Enum.Font.SourceSansBold
     titleTextLabel.TextSize = 18
-    titleTextLabel.Position = UDim2.new(0, 10, 0, 5)  -- Konumu gÃ¼ncellendi
+    titleTextLabel.Position = UDim2.new(0, 10, 0, 5)
     titleTextLabel.Size = UDim2.new(1, -20, 0, 25)
     titleTextLabel.TextStrokeTransparency = 0 
     titleTextLabel.BackgroundTransparency = 1
@@ -1337,17 +1340,50 @@ function UILIB:newNotification(title, description, duration)
     descriptionTextLabel.Size = UDim2.new(1, -20, 0, 60)
     descriptionTextLabel.BackgroundTransparency = 1
     
+    local closeButton = Instance.new("TextButton")
+    closeButton.Parent = frame
+    closeButton.Text = "X"
+    closeButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+    closeButton.Font = Enum.Font.SourceSansBold
+    closeButton.TextSize = 16
+    closeButton.Position = UDim2.new(1, -30, 0, 5)
+    closeButton.Size = UDim2.new(0, 20, 0, 20)
+    closeButton.BorderSizePixel = 0
+    closeButton.ZIndex = 3
+    closeButton.BackgroundTransparency = 1
+    closeButton.MouseButton1Click:Connect(function()
+        frame:TweenPosition(UDim2.new(1, -250, 1, -120), "Out", "Quart", 0.5, true, function()
+            notification:Destroy()
+            table.remove(notificationStack, 1)  -- Kapatılanı listeden çıkar
+            rearrangeNotifications()  -- Bildirimleri tekrar düzenle
+        end)
+    end)
+    
     notification.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     
-    frame.Position = UDim2.new(1, -300, 1, -120)
-    frame:TweenPosition(UDim2.new(1, -250, 1, -120), "Out", "Quart", 0.5, true)
+    table.insert(notificationStack, notification)  -- Yeni notification'u listeye ekle
     
-    wait(duration)
+    if #notificationStack > MAX_NOTIFICATIONS then
+        local removedNotification = table.remove(notificationStack, 1)  -- En alttakini kaldır
+        removedNotification:Destroy()
+    end
     
-    frame:TweenPosition(UDim2.new(1, -250, 1, -80), "Out", "Quart", 0.5, true, function()
-        notification:Destroy()
-    end)
+    rearrangeNotifications()  -- Bildirimleri düzenle
+    
+    -- Bildirimi belirtilen süre sonra otomatik olarak kapat
+    if duration then
+        wait(duration)
+        frame:TweenPosition(UDim2.new(1, -250, 1, -120), "Out", "Quart", 0.5, true, function()
+            notification:Destroy()
+            table.remove(notificationStack, 1)
+            rearrangeNotifications()
+        end)
+    end
 end
+
+-- Notification örneği
+newNotification("Güncelleme", "Yeni içerik eklendi!", 5)
+
 
 function UILIB:Load(name, img, direction)
 	local self = setmetatable({}, UILIB)
