@@ -1295,7 +1295,7 @@ parent.TopBar.ProfileMenu.PlayerProfile.ImageLabel.Image = game:GetService("Play
 local MAX_NOTIFICATIONS = 3
 local notificationStack = {}  -- Bildirimleri takip etmek için bir liste
 
-function showNotification(title, description, duration)
+function UILIB:newNotification(title, description, duration)
     local notification = Instance.new("ScreenGui")
     notification.Name = "Notification"
     
