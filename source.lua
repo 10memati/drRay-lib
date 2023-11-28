@@ -1292,6 +1292,62 @@ local closed = false
 parent.TopBar.ProfileMenu.PlayerProfile.TextLabel.Text = game:GetService("Players").LocalPlayer.DisplayName
 parent.TopBar.ProfileMenu.PlayerProfile.ImageLabel.Image = game:GetService("Players"):GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
 
+function UILIB:newNotification(title, description, duration)
+    local notification = Instance.new("ScreenGui")
+    notification.Name = "Notification"
+    
+    local frame = Instance.new("Frame")
+    frame.Parent = notification
+    frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33) -- Koyu temalÄ± arka plan
+    frame.Position = UDim2.new(1, -300, 1, -120)
+    frame.Size = UDim2.new(0, 250, 0, 100)
+    frame.BorderSizePixel = 0
+    frame.ClipsDescendants = true
+        
+    -- UI Corner ekle
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = frame
+    
+    -- BaÅŸlÄ±k Ã§izgisi
+    local line = Instance.new("Frame")
+    line.Parent = frame
+    line.BackgroundColor3 = Color3.fromRGB(169, 169, 169) -- Gri renk
+    line.Position = UDim2.new(0, 10, 0, 30)
+    line.Size = UDim2.new(1, -20, 0, 1)
+    
+    local titleTextLabel = Instance.new("TextLabel")
+    titleTextLabel.Parent = frame
+    titleTextLabel.Text = title
+    titleTextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleTextLabel.Font = Enum.Font.SourceSansBold
+    titleTextLabel.TextSize = 18
+    titleTextLabel.Position = UDim2.new(0, 10, 0, 5)  -- Konumu gÃ¼ncellendi
+    titleTextLabel.Size = UDim2.new(1, -20, 0, 25)
+    titleTextLabel.TextStrokeTransparency = 0 
+    titleTextLabel.BackgroundTransparency = 1
+    
+    local descriptionTextLabel = Instance.new("TextLabel")
+    descriptionTextLabel.Parent = frame
+    descriptionTextLabel.Text = description
+    descriptionTextLabel.TextColor3 = Color3.fromRGB(204, 204, 204)
+    descriptionTextLabel.Font = Enum.Font.SourceSans
+    descriptionTextLabel.TextSize = 14
+    descriptionTextLabel.Position = UDim2.new(0, 10, 0, 35)
+    descriptionTextLabel.Size = UDim2.new(1, -20, 0, 60)
+    descriptionTextLabel.BackgroundTransparency = 1
+    
+    notification.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    frame.Position = UDim2.new(1, -300, 1, -120)
+    frame:TweenPosition(UDim2.new(1, -250, 1, -120), "Out", "Quart", 0.5, true)
+    
+    wait(duration)
+    
+    frame:TweenPosition(UDim2.new(1, -250, 1, -80), "Out", "Quart", 0.5, true, function()
+        notification:Destroy()
+    end)
+end
 
 function UILIB:Load(name, img, direction)
 	local self = setmetatable({}, UILIB)
