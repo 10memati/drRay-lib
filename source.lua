@@ -1295,7 +1295,7 @@ parent.TopBar.ProfileMenu.PlayerProfile.ImageLabel.Image = game:GetService("Play
 local MAX_NOTIFICATIONS = 3
 local notificationStack = {}  -- Bildirimleri takip etmek için bir liste
 
-function UILIB:newNotification(title, description, duration)
+function showNotification(title, description, duration)
     local notification = Instance.new("ScreenGui")
     notification.Name = "Notification"
     
@@ -1369,22 +1369,21 @@ function UILIB:newNotification(title, description, duration)
     end
     
     rearrangeNotifications()  -- Bildirimleri düzenle
-    
-    -- Bildirimi belirtilen süre sonra otomatik olarak kapat
-    if duration then
-        wait(duration)
-        frame:TweenPosition(UDim2.new(1, -250, 1, -120), "Out", "Quart", 0.5, true, function()
-            notification:Destroy()
-            table.remove(notificationStack, 1)
-            rearrangeNotifications()
-        end)
-    end
 end
 
--- Notification örneği
-newNotification("Güncelleme", "Yeni içerik eklendi!", 5)
-
-
+function rearrangeNotifications()
+    local offsetY = 0
+    
+    for i, notification in ipairs(notificationStack) do
+        local frame = notification.Frame
+        frame.Position = UDim2.new(1, -250, 1, -120 - offsetY)
+        
+        frame:TweenPosition(UDim2.new(1, -250, 1, -120 - offsetY), "Out", "Quart", 0.5, true)
+        
+        offsetY = offsetY + 110  -- Yükseklik ve aralık için
+    end
+		end
+		
 function UILIB:Load(name, img, direction)
 	local self = setmetatable({}, UILIB)
 	task.spawn(function()
